@@ -30,19 +30,19 @@
     }
   }
 
-  const handleSubmit = (val: string) => {
+  const handleSubmit = () => {
     if (!trimmedValue) return;
     value = '';
   };
 
-  const handleButtonClick = (e: MouseEvent) => {
-    handleSubmit(trimmedValue);
+  const handleButtonClick = () => {
+    handleSubmit();
   };
 
   const handleKeydown = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleSubmit(trimmedValue);
+      handleSubmit();
     } else if (isNotMetaKey(e)) {
       isComposing = true;
     }

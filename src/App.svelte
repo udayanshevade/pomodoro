@@ -1,16 +1,7 @@
-<style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
+<script lang="ts">
+  import TaskInput from './Task/Input.svelte';
+</script>
 
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
-</style>
-
-<main />
+<main>
+  <TaskInput />
+</main>
