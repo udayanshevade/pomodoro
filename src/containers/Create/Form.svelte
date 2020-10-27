@@ -1,7 +1,6 @@
 <script lang="ts">
   import { fly } from 'svelte/transition';
   import Textarea from '../../components/Form/Textarea.svelte';
-  import { isNotMetaKey } from './helpers';
 
   export let handleCreate: (value: string) => void;
 
@@ -21,6 +20,7 @@
   $: {
     if (value.trim().length > 0) {
       clearTimeout(isComposingTimeoutConfig.id);
+      interaction = 'composing';
       isComposingTimeoutConfig.id = setTimeout(() => {
         interaction = 'done';
       }, isComposingTimeoutConfig.duration);
@@ -33,12 +33,6 @@
   const handleSubmit = (value: string) => {
     if (!value) return;
     handleCreate(value);
-  };
-
-  const handleKeydown = (e: KeyboardEvent) => {
-    if (isNotMetaKey(e)) {
-      interaction = 'composing';
-    }
   };
 
   const handleButtonClick = (e: MouseEvent) => {
@@ -77,7 +71,6 @@
     <Textarea
       id="create-task-input"
       bind:value
-      {handleKeydown}
       {handleSubmit}
       placeholder="What task are you focusing on?"
       labelText="Brief description of your new task"

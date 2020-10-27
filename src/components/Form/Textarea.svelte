@@ -6,7 +6,6 @@
   export let className: string = undefined;
   export let value: string;
   export let handleSubmit: (value: string) => void;
-  export let handleKeydown: (e: KeyboardEvent) => void = undefined;
   export let labelText: string;
   export let rows: number = 3;
   export let placeholder: string = undefined;
@@ -24,7 +23,6 @@
   } = null;
 
   const onKeydown = (e: KeyboardEvent) => {
-    if (typeof handleKeydown === 'function') handleKeydown(e);
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSubmit(value.trim());
