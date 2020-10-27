@@ -1,7 +1,17 @@
 <script lang="ts">
-  import TaskInput from './Task/Input.svelte';
+  import CreateTaskForm from './containers/Create/Form.svelte';
+
+  const handleCreate = (value: string) => {
+    console.log(value);
+  };
 </script>
 
+<style>
+  main {
+    max-width: 100%;
+  }
+</style>
+
 <main>
-  <TaskInput />
+  <CreateTaskForm {handleCreate} />
 </main>
