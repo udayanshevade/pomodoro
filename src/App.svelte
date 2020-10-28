@@ -1,7 +1,7 @@
 <script lang="ts">
   import CreateTaskForm from './containers/Create/Form.svelte';
 
-  const handleCreate = (value: string) => {
+  const handleCreation = ({ value }: { value: string }) => {
     console.log(value);
   };
 </script>
@@ -13,5 +13,5 @@
 </style>
 
 <main>
-  <CreateTaskForm {handleCreate} />
+  <CreateTaskForm {handleCreation} />
 </main>

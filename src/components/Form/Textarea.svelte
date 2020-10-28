@@ -1,11 +1,10 @@
 <script lang="ts">
   import classnames from 'classnames';
-  import { fly } from 'svelte/transition';
 
   export let id: string;
   export let className: string = undefined;
   export let value: string;
-  export let handleSubmit: (value: string) => void;
+  export let handleKeydown: (e: KeyboardEvent) => void;
   export let labelText: string;
   export let rows: number = 3;
   export let placeholder: string = undefined;
@@ -14,25 +13,11 @@
 
   $: showCount = typeof maxCount !== 'undefined';
   $: count = maxCount - value.trim().length;
-
-  export let transitionConfig: {
-    x?: number;
-    y?: number;
-    duration?: number;
-    delay?: number;
-  } = null;
-
-  const onKeydown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSubmit(value.trim());
-    }
-  };
 </script>
 
 <style>
   .container {
-    width: 100%;
+    max-width: 100%;
     position: relative;
     padding: 1rem;
   }
@@ -71,16 +56,14 @@
   }
 </style>
 
-<div
-  class={classnames('container', className)}
-  transition:fly={transitionConfig}>
+<div class={classnames('container', className)}>
   <label for={id} class="label">
     <div class="label-text">{labelText}</div>
     <textarea
       {id}
       class="input"
       bind:value
-      on:keydown={onKeydown}
+      on:keydown={handleKeydown}
       {placeholder}
       {rows}
       {autofocus} />

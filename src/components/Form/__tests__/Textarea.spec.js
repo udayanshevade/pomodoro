@@ -1,20 +1,15 @@
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import Textarea from '../Textarea.svelte';
 
 describe('Task input', () => {
-  const handleSubmit = jest.fn();
+  const handleKeydown = jest.fn();
 
   const defaultMockProps = {
     id: 'test-input',
     className: 'test-input',
     value: '',
-    handleSubmit,
+    handleKeydown,
     placeholder: 'What task are you focusing on?',
     labelText: 'Brief description of your new task',
     maxCount: 155,
@@ -64,7 +59,7 @@ describe('Task input', () => {
       });
       userEvent.type(textarea, 'foo{enter}');
       await waitFor(() => {
-        expect(handleSubmit).toHaveBeenCalled();
+        expect(handleKeydown).toHaveBeenCalled();
       });
     });
   });
