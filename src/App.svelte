@@ -1,8 +1,16 @@
 <script lang="ts">
   import CreateTaskForm from './containers/Create/Form.svelte';
 
-  const handleCreation = ({ value }: { value: string }) => {
-    console.log(value);
+  const handleCreation = ({
+    text,
+    workDuration,
+    breakDuration,
+  }: {
+    text: string;
+    workDuration: number;
+    breakDuration: number;
+  }) => {
+    console.log(text, workDuration, breakDuration);
   };
 </script>
 
