@@ -1,5 +1,19 @@
 <script lang="ts">
+  import { fly } from 'svelte/transition';
   import CreateTaskForm from './containers/Create/Form.svelte';
+  import ActiveTask from './containers/Active/Task.svelte';
+
+  let route: 'create' | 'active' = 'create';
+
+  let activeTask: {
+    text: string;
+    workDuration: number;
+    breakDuration: number;
+  } = {
+    text: 'Design and implement the active task feature',
+    workDuration: 5 * 60 * 1000,
+    breakDuration: 1 * 60 * 1000,
+  };
 
   const handleCreation = ({
     text,
@@ -10,16 +24,46 @@
     workDuration: number;
     breakDuration: number;
   }) => {
-    console.log(text, workDuration, breakDuration);
+    activeTask = { text, workDuration, breakDuration };
+    route = 'active';
+  };
+
+  const resetActiveTask = () => {
+    activeTask = null;
+    route = 'create';
   };
 </script>
 
 <style>
+  :global(body) {
+    padding: 0;
+  }
+
   main {
-    max-width: 100%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .active-task-route {
+    width: 100%;
+    height: 100%;
   }
 </style>
 
 <main>
-  <CreateTaskForm {handleCreation} />
+  {#if route === 'active'}
+    <div
+      class="active-task-route"
+      out:fly={{ y: 5, duration: 250 }}
+      in:fly={{ y: 5, duration: 250, delay: 500 }}>
+      <ActiveTask {activeTask} {resetActiveTask} />
+    </div>
+  {:else if route === 'create'}
+    <div
+      class="active-task-route"
+      out:fly={{ y: 5, duration: 250 }}
+      in:fly={{ y: 5, duration: 250, delay: 500 }}>
+      <CreateTaskForm {handleCreation} />
+    </div>
+  {:else}<span>How did you get here?</span>{/if}
 </main>

@@ -59,7 +59,7 @@
 
 <style>
   .durations-container {
-    margin: 1rem 0;
+    margin: 0 0 1rem;
   }
 
   .duration-outer-container {
