@@ -94,16 +94,14 @@
 </style>
 
 <div class="container">
-  <div>
-    <Textarea
-      id="create-task-input"
-      bind:value
-      {handleKeydown}
-      placeholder="What task are you focusing on?"
-      labelText="Brief description of your new task"
-      autofocus
-      maxCount={155} />
-  </div>
+  <Textarea
+    id="create-task-input"
+    bind:value
+    {handleKeydown}
+    placeholder="What task are you focusing on?"
+    labelText="Brief description of your new task"
+    autofocus
+    maxCount={155} />
   {#if shouldShowButtons}
     <div class="buttons-container" transition:fly={{ y: 5, duration: 250 }}>
       <Button

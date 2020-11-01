@@ -16,18 +16,18 @@ describe('Task durations form step', () => {
     jest.clearAllMocks();
   });
 
-  it('should render properly', () => {
+  it('should render properly', async () => {
     render(DurationsStep, defaultMockProps);
     expect(screen.getByRole('heading', { name: 'focus' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'break' })).toBeInTheDocument();
     expect(screen.getAllByRole('spinbutton', { name: 'hrs' })).toHaveLength(2);
     expect(screen.getAllByRole('spinbutton', { name: 'mins' })).toHaveLength(2);
-    expect(
-      screen.getByRole('button', { name: 'Start timer' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Edit text' })
-    ).toBeInTheDocument();
+    const startButton = await screen.findByRole('button', {
+      name: 'Start timer',
+    });
+    expect(startButton).toBeInTheDocument();
+    const editButton = await screen.findByRole('button', { name: 'Edit text' });
+    expect(editButton).toBeInTheDocument();
   });
 
   it('should render the specified padded values', () => {
@@ -56,6 +56,4 @@ describe('Task durations form step', () => {
       ).not.toBeInTheDocument();
     });
   });
-
-  it('should show padded values', () => {});
 });

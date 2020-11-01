@@ -18,14 +18,12 @@
   const initPaddedDisplayValues = () => {
     const workDefined = typeof workDuration === 'number';
     const breakDefined = typeof breakDuration === 'number';
-    const workDurationInSecs = workDefined ? workDuration / (60 * 1000) : 0;
-    const breakDurationInSecs = breakDefined ? breakDuration / (60 * 1000) : 0;
-    workHours = padNum(workDefined ? Math.floor(workDurationInSecs / 60) : 0);
-    workMins = padNum(workDefined ? workDurationInSecs % 60 : 25);
-    breakHours = padNum(
-      breakDefined ? Math.floor(breakDurationInSecs / 60) : 0
-    );
-    breakMins = padNum(breakDefined ? breakDurationInSecs % 60 : 5);
+    const workDurationInMins = workDefined ? workDuration / (60 * 1000) : 25;
+    const breakDurationInMins = breakDefined ? breakDuration / (60 * 1000) : 5;
+    workHours = padNum(Math.floor(workDurationInMins / 60));
+    workMins = padNum(workDurationInMins % 60);
+    breakHours = padNum(Math.floor(breakDurationInMins / 60));
+    breakMins = padNum(breakDurationInMins % 60);
   };
 
   initPaddedDisplayValues();
@@ -58,6 +56,11 @@
 </script>
 
 <style>
+  .container {
+    width: 100%;
+    height: 100%;
+  }
+
   .durations-container {
     margin: 0 0 1rem;
   }
