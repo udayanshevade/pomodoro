@@ -58,11 +58,14 @@
 <style>
   .container {
     width: 100%;
-    height: 100%;
   }
 
   .durations-container {
     margin: 0 0 1rem;
+    display: flex;
+    flex-flow: center;
+    justify-content: center;
+    align-items: center;
   }
 
   .duration-outer-container {
@@ -93,6 +96,10 @@
     align-items: flex-end;
     margin-bottom: 1rem;
     position: relative;
+  }
+
+  .duration-container:first-of-type {
+    margin-right: 1rem;
   }
 
   .duration-container::after {
@@ -307,7 +314,9 @@
     </div>
   </div>
   {#if shouldShowButtons}
-    <div class="buttons-container" transition:fly={{ y: 5, duration: 250 }}>
+    <div
+      class="buttons-container"
+      transition:fly|local={{ y: 5, duration: 250 }}>
       <Button
         className="create-form-button text-button"
         text="Edit text"

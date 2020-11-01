@@ -44,26 +44,26 @@
     height: 100%;
   }
 
-  .active-task-route {
+  .active-route {
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
   }
 </style>
 
 <main>
   {#if route === 'active'}
     <div
-      class="active-task-route"
-      out:fly={{ y: 5, duration: 250 }}
-      in:fly={{ y: 5, duration: 250, delay: 500 }}>
+      class="active-route"
+      out:fly={{ y: 0, duration: 250 }}
+      in:fly={{ y: 0, duration: 250, delay: 500 }}>
       <ActiveTask {activeTask} {resetActiveTask} />
     </div>
   {:else if route === 'create'}
     <div
-      class="active-task-route"
-      out:fly={{ y: 5, duration: 250 }}
-      in:fly={{ y: 5, duration: 250, delay: 500 }}>
+      class="active-route"
+      out:fly={{ y: 0, duration: 250 }}
+      in:fly={{ y: 0, duration: 250, delay: 500 }}>
       <CreateTaskForm {handleCreation} />
     </div>
   {:else}<span>How did you get here?</span>{/if}

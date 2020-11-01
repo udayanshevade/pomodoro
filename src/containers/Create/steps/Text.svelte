@@ -103,7 +103,9 @@
     autofocus
     maxCount={155} />
   {#if shouldShowButtons}
-    <div class="buttons-container" transition:fly={{ y: 5, duration: 250 }}>
+    <div
+      class="buttons-container"
+      transition:fly|local={{ y: 5, duration: 250 }}>
       <Button
         className="create-form-button timer-button"
         text="Set duration"

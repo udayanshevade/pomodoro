@@ -2,6 +2,7 @@
   import { fly } from 'svelte/transition';
   import TextStep from './steps/Text.svelte';
   import DurationsStep from './steps/Durations.svelte';
+  import { transitionOut } from '../../utils/transitions';
 
   type FormStep = 'text' | 'duration';
 
@@ -59,15 +60,15 @@
     {#if step === 'text'}
       <div
         class="step-container text-step-container"
-        out:fly={{ y: 5, duration: 250 }}
-        in:fly={{ y: 5, duration: 250, delay: 500 }}>
+        out:transitionOut={{ y: 5, duration: 250 }}
+        in:fly={{ y: 5, duration: 250, delay: 250 }}>
         <TextStep bind:value={text} {handleCreate} {goToStep} />
       </div>
     {:else if step === 'duration'}
       <div
         class="step-container durations-step-container"
-        out:fly={{ y: 5, duration: 250 }}
-        in:fly={{ y: 5, duration: 250, delay: 500 }}>
+        out:transitionOut={{ y: 5, duration: 250 }}
+        in:fly={{ y: 5, duration: 250, delay: 250 }}>
         <DurationsStep
           bind:workDuration
           bind:breakDuration
