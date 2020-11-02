@@ -55,15 +55,15 @@
   {#if route === 'active'}
     <div
       class="active-route"
-      out:fly={{ y: 0, duration: 250 }}
-      in:fly={{ y: 0, duration: 250, delay: 500 }}>
+      out:fly={{ y: 5, duration: 250 }}
+      in:fly={{ y: 5, duration: 250, delay: 500 }}>
       <ActiveTask {activeTask} {resetActiveTask} />
     </div>
   {:else if route === 'create'}
     <div
       class="active-route"
-      out:fly={{ y: 0, duration: 250 }}
-      in:fly={{ y: 0, duration: 250, delay: 500 }}>
+      out:fly={{ y: 5, duration: 250 }}
+      in:fly={{ y: 5, duration: 250, delay: 500 }}>
       <CreateTaskForm {handleCreation} />
     </div>
   {:else}<span>How did you get here?</span>{/if}

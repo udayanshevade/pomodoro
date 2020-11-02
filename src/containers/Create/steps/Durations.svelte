@@ -80,6 +80,10 @@
     opacity: 1;
   }
 
+  .duration-outer-container:first-child {
+    margin-right: 2rem;
+  }
+
   .duration-title {
     font-size: 2.4rem;
     margin: 2rem 0 1rem;
@@ -96,10 +100,6 @@
     align-items: flex-end;
     margin-bottom: 1rem;
     position: relative;
-  }
-
-  .duration-container:first-of-type {
-    margin-right: 1rem;
   }
 
   .duration-container::after {

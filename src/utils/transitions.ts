@@ -1,5 +1,4 @@
 import { fly } from 'svelte/transition';
-import { cubicInOut } from 'svelte/easing';
 
 export const transitionOut = (
   node: HTMLElement,
