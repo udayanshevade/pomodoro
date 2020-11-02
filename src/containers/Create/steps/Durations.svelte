@@ -3,11 +3,30 @@
   import classnames from 'classnames';
   import Button from '../../../components/Form/Button.svelte';
   import { padNum } from '../../../utils/helpers';
+  import {
+    getMinsFromMillis,
+    getMillisFromMins,
+    getHoursAndMinsFromMillis,
+    getMillisFromHoursAndMins,
+  } from '../../../utils/timeUnits';
 
   export let handleCreate: () => void;
   export let goToStep: (step: string) => void;
-  export let workDuration: number;
-  export let breakDuration: number;
+  export let workDuration: number = getMillisFromMins(25);
+  export let breakDuration: number = getMillisFromMins(5);
+  let valuesInitialized = false;
+
+  const assignWorkHoursAndMins = (duration: number) => {
+    const { hrs, mins } = getHoursAndMinsFromMillis(duration);
+    workHours = padNum(hrs);
+    workMins = padNum(mins);
+  };
+
+  const assignBreakHoursAndMins = (duration: number) => {
+    const { hrs, mins } = getHoursAndMinsFromMillis(duration);
+    breakHours = padNum(hrs);
+    breakMins = padNum(mins);
+  };
 
   // duration input form values
   // values are 0 padded ('01:23' instead of '1:23')
@@ -16,26 +35,46 @@
   let breakHours: string;
   let breakMins: string;
   const initPaddedDisplayValues = () => {
-    const workDefined = typeof workDuration === 'number';
-    const breakDefined = typeof breakDuration === 'number';
-    const workDurationInMins = workDefined ? workDuration / (60 * 1000) : 25;
-    const breakDurationInMins = breakDefined ? breakDuration / (60 * 1000) : 5;
-    workHours = padNum(Math.floor(workDurationInMins / 60));
-    workMins = padNum(workDurationInMins % 60);
-    breakHours = padNum(Math.floor(breakDurationInMins / 60));
-    breakMins = padNum(breakDurationInMins % 60);
+    assignWorkHoursAndMins(workDuration);
+    assignBreakHoursAndMins(breakDuration);
   };
 
   initPaddedDisplayValues();
 
+  const getRecommendedBreakDuration = (workDuration: number): number => {
+    const workMins = getMinsFromMillis(workDuration);
+    let recommendedBreakInMins = 0;
+    if (workMins < 26) {
+      recommendedBreakInMins = 5;
+    } else if (workMins < 50) {
+      recommendedBreakInMins = 8;
+    } else if (workMins < 90) {
+      recommendedBreakInMins = 10;
+    } else {
+      recommendedBreakInMins = 15;
+    }
+    return getMillisFromMins(recommendedBreakInMins);
+  };
+
   // prop form values are updated/converted from the padded input values
   $: {
-    workDuration =
-      Number(workHours) * 60 * 60 * 1000 + Number(workMins) * 60 * 1000;
+    if (valuesInitialized) {
+      const updated = getMillisFromHoursAndMins({
+        hrs: Number(workHours),
+        mins: Number(workMins),
+      });
+      workDuration = updated;
+      const recommendedBreak = getRecommendedBreakDuration(updated);
+      assignBreakHoursAndMins(recommendedBreak);
+    } else {
+      valuesInitialized = true;
+    }
   }
   $: {
-    breakDuration =
-      Number(breakHours) * 60 * 60 * 1000 + Number(breakMins) * 60 * 1000;
+    breakDuration = getMillisFromHoursAndMins({
+      hrs: Number(breakHours),
+      mins: Number(breakMins),
+    });
   }
 
   // determines which duration inputs and section to emphasize as active
