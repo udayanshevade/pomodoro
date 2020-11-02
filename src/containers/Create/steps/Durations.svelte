@@ -58,6 +58,7 @@
 <style>
   .container {
     width: 100%;
+    height: 260px;
   }
 
   .durations-container {
