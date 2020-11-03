@@ -77,6 +77,7 @@
     bottom: 0;
     width: 100%;
     background: #cfcfcf;
+    opacity: 0.75;
   }
 
   .content {
@@ -133,6 +134,7 @@
 
   .container :global(.interrupt-button) {
     width: 95px;
+    height: 32px;
     padding: 0.25rem 1rem;
     border-radius: 1.2rem;
     font-size: 0.8rem;
@@ -142,27 +144,33 @@
 
   .container :global(.pause-button),
   .container :global(.resume-button) {
-    background: #cecece;
+    background: #fff;
     color: #000;
-    border: 2px solid transparent;
+    border: 2px solid #aaa;
   }
 
   .container :global(.pause-button):hover,
   .container :global(.pause-button):focus,
   .container :global(.resume-button):hover,
   .container :global(.resume-button):focus {
-    background: #efefef;
+    background: #fff;
     border: 2px solid #000;
   }
 
   .container :global(.stop-button) {
     background: none;
     color: #000;
-    border: 2px solid #000;
+    border: 2px solid transparent;
   }
 
   .container :global(.stop-button) {
     margin-left: 1rem;
+  }
+
+  .container :global(.stop-button):hover,
+  .container :global(.stop-button):focus {
+    background: #fff;
+    border: 2px solid #000;
   }
 
   @media screen and (min-width: 500px) {
@@ -187,6 +195,7 @@
     }
 
     .container :global(.interrupt-button) {
+      height: 38px;
       font-size: 1rem;
       border-radius: 1.6rem;
       padding: 0.5rem 1rem;
@@ -224,7 +233,7 @@
         <Button
           className="interrupt-button stop-button"
           handleButtonClick={handleInterruptClick}
-          children="Stop" />
+          children="Exit" />
       </div>
     </div>
   </div>

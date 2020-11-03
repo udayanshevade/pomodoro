@@ -33,6 +33,11 @@
     activeTask = null;
     route = 'interrupted';
   };
+
+  const handleInterruption = (explanation: string) => {
+    console.log(explanation);
+    route = 'create';
+  };
 </script>
 
 <style>
@@ -72,7 +77,7 @@
       class="active-route"
       out:fly={{ y: 5, duration: 250 }}
       in:fly={{ y: 5, duration: 250, delay: 500 }}>
-      <InterruptedTask />
+      <InterruptedTask {handleInterruption} />
     </div>
   {:else}<span>How did you get here?</span>{/if}
 </main>

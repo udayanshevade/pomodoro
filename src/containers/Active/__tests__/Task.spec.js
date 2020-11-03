@@ -29,7 +29,7 @@ describe('Active Task', () => {
     expect(screen.getByText('foo')).toBeInTheDocument();
     expect(screen.getByText('Break in:')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Stop' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Exit' })).toBeInTheDocument();
   });
 
   it('timer should work', async () => {
@@ -111,7 +111,7 @@ describe('Active Task', () => {
       },
       interruptActiveTask,
     });
-    const stopButton = screen.getByRole('button', { name: 'Stop' });
+    const stopButton = screen.getByRole('button', { name: 'Exit' });
     userEvent.click(stopButton);
     expect(interruptActiveTask).toHaveBeenCalled();
   });
