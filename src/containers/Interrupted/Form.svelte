@@ -4,7 +4,7 @@
 
   let explanation: string = '';
   export let handleInterruption: (explanation: string) => void;
-  export let handleDoneButtonClick = () => {
+  let handleDoneButtonClick = () => {
     handleInterruption(explanation);
   };
 
