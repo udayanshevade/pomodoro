@@ -10,7 +10,7 @@ describe('Task input', () => {
     formId: 'test-form-id',
     name: 'test-name',
     handleButtonClick,
-    text: 'test-text',
+    children: 'test-text',
   };
 
   beforeEach(() => {

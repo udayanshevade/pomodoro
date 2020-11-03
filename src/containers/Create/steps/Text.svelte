@@ -108,12 +108,12 @@
       transition:fly|local={{ y: 5, duration: 250 }}>
       <Button
         className="create-form-button timer-button"
-        text="Set duration"
-        handleButtonClick={handleTimerButtonClick} />
+        handleButtonClick={handleTimerButtonClick}
+        children="Set duration" />
       <Button
         className="create-form-button get-started-button"
-        text="Start timer"
-        handleButtonClick={handleSubmitButtonClick} />
+        handleButtonClick={handleSubmitButtonClick}
+        children="Start timer" />
     </div>
   {/if}
 </div>

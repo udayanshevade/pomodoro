@@ -2,8 +2,9 @@
   import { fly } from 'svelte/transition';
   import CreateTaskForm from './containers/Create/Form.svelte';
   import ActiveTask from './containers/Active/Task.svelte';
+  import InterruptedTask from './containers/Interrupted/Form.svelte';
 
-  let route: 'create' | 'active' = 'create';
+  let route: 'create' | 'active' | 'interrupted' = 'create';
 
   let activeTask: {
     text: string;
@@ -28,9 +29,9 @@
     route = 'active';
   };
 
-  const resetActiveTask = () => {
+  const interruptActiveTask = () => {
     activeTask = null;
-    route = 'create';
+    route = 'interrupted';
   };
 </script>
 
@@ -57,7 +58,7 @@
       class="active-route"
       out:fly={{ y: 5, duration: 250 }}
       in:fly={{ y: 5, duration: 250, delay: 500 }}>
-      <ActiveTask {activeTask} {resetActiveTask} />
+      <ActiveTask {activeTask} {interruptActiveTask} />
     </div>
   {:else if route === 'create'}
     <div
@@ -65,6 +66,13 @@
       out:fly={{ y: 5, duration: 250 }}
       in:fly={{ y: 5, duration: 250, delay: 500 }}>
       <CreateTaskForm {handleCreation} />
+    </div>
+  {:else if route === 'interrupted'}
+    <div
+      class="active-route"
+      out:fly={{ y: 5, duration: 250 }}
+      in:fly={{ y: 5, duration: 250, delay: 500 }}>
+      <InterruptedTask />
     </div>
   {:else}<span>How did you get here?</span>{/if}
 </main>

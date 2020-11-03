@@ -4,10 +4,11 @@
   import Button from '../../components/Form/Button.svelte';
   import { onMount } from 'svelte';
 
+  let state: 'active' | 'paused' = 'active';
   let container: HTMLDivElement;
   const height = spring(100, { damping: 0.3 });
 
-  export let resetActiveTask: () => void;
+  export let interruptActiveTask: () => void;
   export let activeTask: {
     text: string;
     workDuration: number;
@@ -25,10 +26,14 @@
     duration: 1000,
   };
 
-  onMount(() => {
+  const startInterval = () => {
     countdownInterval.id = setInterval(() => {
       timeElapsed += countdownInterval.duration;
     }, countdownInterval.duration);
+  };
+
+  onMount(() => {
+    startInterval();
   });
 
   $: {
@@ -43,8 +48,18 @@
   // TODO: add breakDuration handling
   const { text, workDuration } = activeTask;
 
+  const handlePauseClick = () => {
+    clearInterval(countdownInterval.id);
+    state = 'paused';
+  };
+
+  const handleResumeClick = () => {
+    startInterval();
+    state = 'active';
+  };
+
   const handleInterruptClick = () => {
-    resetActiveTask();
+    interruptActiveTask();
   };
 </script>
 
@@ -61,8 +76,7 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    background: #caf0f8;
-    opacity: 0.75;
+    background: #cfcfcf;
   }
 
   .content {
@@ -103,7 +117,7 @@
     margin: 1.25rem 0;
     font-size: 2.8rem;
     text-align: center;
-    max-width: 50rem;
+    max-width: 100%;
   }
 
   .content .task-text-label,
@@ -117,24 +131,38 @@
     justify-content: center;
   }
 
-  .container :global(.active-task-button) {
-    padding: 0.5rem 1rem;
+  .container :global(.interrupt-button) {
+    width: 95px;
+    padding: 0.25rem 1rem;
     border-radius: 1.2rem;
     font-size: 0.8rem;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
   }
 
-  .container :global(.interrupt-button) {
-    background: transparent;
-    border: 2px solid #000;
+  .container :global(.pause-button),
+  .container :global(.resume-button) {
+    background: #cecece;
     color: #000;
+    border: 2px solid transparent;
   }
 
-  .container :global(.interrupt-button):hover,
-  .container :global(.interrupt-button):focus {
-    background: #000;
-    color: #fff;
+  .container :global(.pause-button):hover,
+  .container :global(.pause-button):focus,
+  .container :global(.resume-button):hover,
+  .container :global(.resume-button):focus {
+    background: #efefef;
+    border: 2px solid #000;
+  }
+
+  .container :global(.stop-button) {
+    background: none;
+    color: #000;
+    border: 2px solid #000;
+  }
+
+  .container :global(.stop-button) {
+    margin-left: 1rem;
   }
 
   @media screen and (min-width: 500px) {
@@ -159,9 +187,9 @@
     }
 
     .container :global(.interrupt-button) {
-      font-size: 1.2rem;
-      border-radius: 2rem;
-      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 1.6rem;
+      padding: 0.5rem 1rem;
     }
   }
 </style>
@@ -182,10 +210,21 @@
         <h3 class="task-text">{text}</h3>
       </div>
       <div class="buttons-container">
+        {#if state === 'active'}
+          <Button
+            className="interrupt-button pause-button"
+            handleButtonClick={handlePauseClick}
+            children="Pause" />
+        {:else}
+          <Button
+            className="interrupt-button resume-button"
+            handleButtonClick={handleResumeClick}
+            children="Resume" />
+        {/if}
         <Button
-          className="active-task-button interrupt-button"
-          text="Interrupt"
-          handleButtonClick={handleInterruptClick} />
+          className="interrupt-button stop-button"
+          handleButtonClick={handleInterruptClick}
+          children="Stop" />
       </div>
     </div>
   </div>

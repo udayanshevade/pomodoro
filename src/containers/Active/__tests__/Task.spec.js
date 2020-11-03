@@ -3,10 +3,10 @@ import userEvent from '@testing-library/user-event';
 import ActiveTask from '../Task.svelte';
 
 describe('Active Task', () => {
-  const resetActiveTask = jest.fn();
+  const interruptActiveTask = jest.fn();
   beforeEach(() => {
     jest.useFakeTimers();
-    resetActiveTask.mockClear();
+    interruptActiveTask.mockClear();
   });
 
   afterEach(() => {
@@ -21,26 +21,25 @@ describe('Active Task', () => {
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
       },
-      resetActiveTask,
+      interruptActiveTask,
     });
     const timer = screen.getByRole('timer');
     expect(timer).toBeInTheDocument();
     expect(timer).toHaveTextContent('5:00');
     expect(screen.getByText('foo')).toBeInTheDocument();
     expect(screen.getByText('Break in:')).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Interrupt' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Stop' })).toBeInTheDocument();
   });
 
   it('timer should work', async () => {
     render(ActiveTask, {
       activeTask: {
-        text: 'foo',
+        children: 'foo',
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
       },
-      resetActiveTask,
+      interruptActiveTask,
     });
     const timer = screen.getByRole('timer');
     expect(timer).toBeInTheDocument();
@@ -56,11 +55,11 @@ describe('Active Task', () => {
   it('should show a backdrop visual timer', async () => {
     render(ActiveTask, {
       activeTask: {
-        text: 'foo',
+        children: 'foo',
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
       },
-      resetActiveTask,
+      interruptActiveTask,
     });
     const backgroundProgress = screen.getByTestId('background-progress');
     expect(backgroundProgress).toBeInTheDocument();
@@ -73,18 +72,47 @@ describe('Active Task', () => {
     );
   });
 
-  it('handles interrupt button', () => {
-    window.alert = jest.fn();
+  it('handles the pause and resume buttons', async () => {
     render(ActiveTask, {
       activeTask: {
-        text: 'foo',
+        children: 'foo',
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
       },
-      resetActiveTask,
+      interruptActiveTask,
     });
-    const interruptButton = screen.getByRole('button', { name: 'Interrupt' });
-    userEvent.click(interruptButton);
-    expect(resetActiveTask).toHaveBeenCalled();
+    const timer = screen.getByRole('timer');
+    const pauseButton = screen.getByRole('button', { name: 'Pause' });
+    userEvent.click(pauseButton);
+    await waitFor(
+      () => {
+        expect(timer).toHaveTextContent('5:00');
+      },
+      { timeout: 4000 }
+    );
+    const resumeButton = screen.getByRole('button', { name: 'Resume' });
+    expect(resumeButton).toBeInTheDocument();
+    userEvent.click(resumeButton);
+    await waitFor(
+      () => {
+        expect(timer).toHaveTextContent('4:56');
+      },
+      { timeout: 4000 }
+    );
+  });
+
+  it('handles the stop button', () => {
+    window.alert = jest.fn();
+    render(ActiveTask, {
+      activeTask: {
+        children: 'foo',
+        workDuration: 5 * 60 * 1000,
+        breakDuration: 1 * 60 * 1000,
+      },
+      interruptActiveTask,
+    });
+    const stopButton = screen.getByRole('button', { name: 'Stop' });
+    userEvent.click(stopButton);
+    expect(interruptActiveTask).toHaveBeenCalled();
   });
 });
