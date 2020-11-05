@@ -35,7 +35,7 @@ describe('Active Task', () => {
   it('timer should work', async () => {
     render(ActiveTask, {
       activeTask: {
-        children: 'foo',
+        text: 'foo',
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
       },
@@ -55,7 +55,7 @@ describe('Active Task', () => {
   it('should show a backdrop visual timer', async () => {
     render(ActiveTask, {
       activeTask: {
-        children: 'foo',
+        text: 'foo',
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
       },
@@ -75,7 +75,7 @@ describe('Active Task', () => {
   it('handles the pause and resume buttons', async () => {
     render(ActiveTask, {
       activeTask: {
-        children: 'foo',
+        text: 'foo',
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
       },
@@ -105,7 +105,7 @@ describe('Active Task', () => {
     window.alert = jest.fn();
     render(ActiveTask, {
       activeTask: {
-        children: 'foo',
+        text: 'foo',
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
       },
@@ -114,5 +114,36 @@ describe('Active Task', () => {
     const stopButton = screen.getByRole('button', { name: 'Exit' });
     userEvent.click(stopButton);
     expect(interruptActiveTask).toHaveBeenCalled();
+  });
+
+  it('handles switching between work and break timers', async () => {
+    render(ActiveTask, {
+      activeTask: {
+        text: 'foo',
+        workDuration: 4 * 1000,
+        breakDuration: 1000,
+      },
+      interruptActiveTask,
+    });
+    expect(screen.getByText('Break in:')).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getByText('Work in:')).toBeInTheDocument();
+        const breakButton = screen.getByRole('button', { name: 'Break' });
+        expect(breakButton).toBeInTheDocument();
+        userEvent.click(breakButton);
+      },
+      { timeout: 4000 }
+    );
+    await waitFor(
+      () => {
+        expect(screen.getByText('Break in:')).toBeInTheDocument();
+        const workButton = screen.getByRole('button', { name: 'Work' });
+        const doneButton = screen.getByRole('button', { name: 'Exit' });
+        expect(workButton).toBeInTheDocument();
+        expect(doneButton).toBeInTheDocument();
+      },
+      { timeout: 1000 }
+    );
   });
 });

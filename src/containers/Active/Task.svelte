@@ -4,10 +4,18 @@
   import Button from '../../components/Form/Button.svelte';
   import { onMount } from 'svelte';
 
-  let state: 'active' | 'paused' = 'active';
+  let state:
+    | 'working'
+    | 'work-paused'
+    | 'work-interval-complete'
+    | 'breaking'
+    | 'break-paused'
+    | 'break-interval-complete' = 'working';
   let container: HTMLDivElement;
   const height = spring(100, { damping: 0.3 });
 
+  export let workIntervals: number = 0;
+  export let breakIntervals: number = 0;
   export let interruptActiveTask: () => void;
   export let activeTask: {
     text: string;
@@ -37,25 +45,52 @@
   });
 
   $: {
-    const percentElapsed = timeElapsed / workDuration;
-    if (percentElapsed === 1) {
+    if (state === 'working' && timeElapsed === workDuration) {
       clearInterval(countdownInterval.id);
+      state = 'work-interval-complete';
+      height.set(0);
+      timeRemaining = breakDuration;
+    } else if (state === 'breaking' && timeElapsed === breakDuration) {
+      clearInterval(countdownInterval.id);
+      state = 'break-interval-complete';
+      height.set(0);
+      timeRemaining = workDuration;
+    } else {
+      const percentElapsed = timeElapsed / workDuration;
+      height.set(Math.round((1 - percentElapsed) * 100));
+      timeRemaining = workDuration - timeElapsed;
     }
-    height.set(Math.round((1 - percentElapsed) * 100));
-    timeRemaining = workDuration - timeElapsed;
   }
 
   // TODO: add breakDuration handling
-  const { text, workDuration } = activeTask;
+  const { text, workDuration, breakDuration } = activeTask;
 
   const handlePauseClick = () => {
+    if (state === 'working') {
+      state = 'work-paused';
+    } else if (state === 'breaking') {
+      state = 'break-paused';
+    }
     clearInterval(countdownInterval.id);
-    state = 'paused';
   };
 
   const handleResumeClick = () => {
+    state = 'working';
     startInterval();
-    state = 'active';
+  };
+
+  const handleBreakClick = () => {
+    timeElapsed = 0;
+    state = 'breaking';
+    startInterval();
+    breakIntervals += 1;
+  };
+
+  const handleWorkClick = () => {
+    timeElapsed = 0;
+    state = 'working';
+    startInterval();
+    workIntervals += 1;
   };
 
   const handleInterruptClick = () => {
@@ -103,6 +138,11 @@
     margin-bottom: 4rem;
   }
 
+  .display-value-label {
+    font-size: 36px;
+    margin: 1rem 0;
+  }
+
   .task-text-container {
     display: flex;
     flex-flow: column;
@@ -144,9 +184,9 @@
 
   .container :global(.pause-button),
   .container :global(.resume-button) {
-    background: #fff;
-    color: #000;
-    border: 2px solid #aaa;
+    background: #333;
+    color: #fff;
+    border: 2px solid #333;
   }
 
   .container :global(.pause-button):hover,
@@ -154,7 +194,8 @@
   .container :global(.resume-button):hover,
   .container :global(.resume-button):focus {
     background: #fff;
-    border: 2px solid #000;
+    color: #333;
+    border: 2px solid #333;
   }
 
   .container :global(.stop-button) {
@@ -179,7 +220,8 @@
     }
 
     .display-value-label {
-      font-size: 1.8rem;
+      font-size: 120px;
+      margin: 1rem 0;
     }
 
     .container :global(.time-remaining-display) {
@@ -211,7 +253,10 @@
   <div class="content">
     <div class="content-inner">
       <div class="display-value-container">
-        <div class="display-value-label">Break in:</div>
+        <div class="display-value-label">
+          {state === 'working' || state === 'break-interval-complete' || state === 'work-paused' ? 'Break' : 'Work'}
+          in:
+        </div>
         <Display className="time-remaining-display" value={timeRemaining} />
       </div>
       <div class="task-text-container">
@@ -219,21 +264,38 @@
         <h3 class="task-text">{text}</h3>
       </div>
       <div class="buttons-container">
-        {#if state === 'active'}
+        {#if state === 'working' || state === 'breaking'}
           <Button
             className="interrupt-button pause-button"
             handleButtonClick={handlePauseClick}
             children="Pause" />
-        {:else}
+        {:else if state === 'work-paused' || state === 'break-paused'}
           <Button
             className="interrupt-button resume-button"
             handleButtonClick={handleResumeClick}
             children="Resume" />
+        {:else if state === 'work-interval-complete'}
+          <Button
+            className="interrupt-button resume-button"
+            handleButtonClick={handleBreakClick}
+            children="Break" />
+        {:else if state === 'break-interval-complete'}
+          <Button
+            className="interrupt-button resume-button"
+            handleButtonClick={handleWorkClick}
+            children="Work" />
         {/if}
-        <Button
-          className="interrupt-button stop-button"
-          handleButtonClick={handleInterruptClick}
-          children="Exit" />
+        {#if state === 'work-interval-complete'}
+          <Button
+            className="interrupt-button stop-button"
+            handleButtonClick={() => console.log('done')}
+            children="Done" />
+        {:else}
+          <Button
+            className="interrupt-button stop-button"
+            handleButtonClick={handleInterruptClick}
+            children="Exit" />
+        {/if}
       </div>
     </div>
   </div>
