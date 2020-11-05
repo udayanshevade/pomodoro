@@ -10,11 +10,7 @@
     text: string;
     workDuration: number;
     breakDuration: number;
-  } = {
-    text: 'Design and implement the active task feature',
-    workDuration: 5 * 60 * 1000,
-    breakDuration: 1 * 60 * 1000,
-  };
+  } = null;
 
   const handleCreation = ({
     text,

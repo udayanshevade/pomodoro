@@ -61,7 +61,7 @@
     className="interruption-input"
     {handleKeydown}
     bind:value={explanation}
-    labelText="Some details to remember the interruption"
+    labelText="Some details to remember the interruption (optional)"
     placeholder="Did something else come up?"
     autofocus />
   <div class="buttons-container">

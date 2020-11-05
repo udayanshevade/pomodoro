@@ -13,7 +13,7 @@ describe('Interrupted task form', () => {
   it('renders correctly', () => {
     render(Form, defaultMockProps);
     expect(
-      screen.getByText('Some details to remember the interruption')
+      screen.getByText('Some details to remember the interruption (optional)')
     ).toBeInTheDocument();
     expect(screen.getByRole('textbox')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument();
