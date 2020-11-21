@@ -17,10 +17,12 @@
   export let workIntervals: number = 0;
   export let breakIntervals: number = 0;
   export let interruptActiveTask: () => void;
+  export let handlePause: () => void;
   export let activeTask: {
     text: string;
     workDuration: number;
     breakDuration: number;
+    pauses: number;
   };
 
   let timeElapsed: number = 0;
@@ -63,11 +65,12 @@
   }
 
   // TODO: add breakDuration handling
-  const { text, workDuration, breakDuration } = activeTask;
+  const { text, workDuration, breakDuration, pauses } = activeTask;
 
   const handlePauseClick = () => {
     if (state === 'working') {
       state = 'work-paused';
+      handlePause();
     } else if (state === 'breaking') {
       state = 'break-paused';
     }

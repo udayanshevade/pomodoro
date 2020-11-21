@@ -10,6 +10,7 @@
     text: string;
     workDuration: number;
     breakDuration: number;
+    pauses: number;
   } = null;
 
   const handleCreation = ({
@@ -21,8 +22,12 @@
     workDuration: number;
     breakDuration: number;
   }) => {
-    activeTask = { text, workDuration, breakDuration };
+    activeTask = { text, workDuration, breakDuration, pauses: 0 };
     route = 'active';
+  };
+
+  const handlePause = () => {
+    activeTask.pauses += 1;
   };
 
   const interruptActiveTask = () => {
@@ -59,7 +64,7 @@
       class="active-route"
       out:fly={{ y: 5, duration: 250 }}
       in:fly={{ y: 5, duration: 250, delay: 500 }}>
-      <ActiveTask {activeTask} {interruptActiveTask} />
+      <ActiveTask {activeTask} {interruptActiveTask} {handlePause} />
     </div>
   {:else if route === 'create'}
     <div

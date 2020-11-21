@@ -4,9 +4,11 @@ import ActiveTask from '../Task.svelte';
 
 describe('Active Task', () => {
   const interruptActiveTask = jest.fn();
+  const handlePause = jest.fn();
   beforeEach(() => {
     jest.useFakeTimers();
     interruptActiveTask.mockClear();
+    handlePause.mockClear();
   });
 
   afterEach(() => {
@@ -20,8 +22,10 @@ describe('Active Task', () => {
         text: 'foo',
         workDuration: 5 * 60 * 1000,
         breakDuration: 1 * 60 * 1000,
+        pauses: 0,
       },
       interruptActiveTask,
+      handlePause,
     });
     const timer = screen.getByRole('timer');
     expect(timer).toBeInTheDocument();
@@ -40,6 +44,7 @@ describe('Active Task', () => {
         breakDuration: 1 * 60 * 1000,
       },
       interruptActiveTask,
+      handlePause,
     });
     const timer = screen.getByRole('timer');
     expect(timer).toBeInTheDocument();
@@ -60,6 +65,7 @@ describe('Active Task', () => {
         breakDuration: 1 * 60 * 1000,
       },
       interruptActiveTask,
+      handlePause,
     });
     const backgroundProgress = screen.getByTestId('background-progress');
     expect(backgroundProgress).toBeInTheDocument();
@@ -80,6 +86,7 @@ describe('Active Task', () => {
         breakDuration: 1 * 60 * 1000,
       },
       interruptActiveTask,
+      handlePause,
     });
     const timer = screen.getByRole('timer');
     const pauseButton = screen.getByRole('button', { name: 'Pause' });
@@ -110,6 +117,7 @@ describe('Active Task', () => {
         breakDuration: 1 * 60 * 1000,
       },
       interruptActiveTask,
+      handlePause,
     });
     const stopButton = screen.getByRole('button', { name: 'Exit' });
     userEvent.click(stopButton);
@@ -124,6 +132,7 @@ describe('Active Task', () => {
         breakDuration: 1000,
       },
       interruptActiveTask,
+      handlePause,
     });
     expect(screen.getByText('Break in:')).toBeInTheDocument();
     await waitFor(
